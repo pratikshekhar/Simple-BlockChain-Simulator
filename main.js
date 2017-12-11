@@ -15,12 +15,27 @@
         this.data = data;
         this.previousHash = previousHash;
         this.hash = this.calculateHash(); // this will contain the hash of the block
+        this.nonce =0;
         }
 
 
     //The following function is going to calculate the hash of this block
         calculateHash(){
-            return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+            return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)+this.nonce).toString();
+        }
+
+
+        mineBlock(difficulty){
+
+            while(this.hash.substring(0,difficulty) !== Array(difficulty+1).join("0")){
+            this.nonce++;
+                this.hash = this.calculateHash();
+
+            }
+
+            console.log("Block Mined: " + this.hash);
+
+
         }
     }
 
@@ -30,6 +45,7 @@
         constructor(){
 
         this.chain = [this.createGenesisBlock()]; // array of blocks
+        this.difficulty =5;
 
         }
 
@@ -43,7 +59,7 @@
 
     addBlock(newBlock){
         newBlock.previousHash = this.getLatestBlock().hash;  // set previous hash to last block on the chain
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
 
@@ -72,11 +88,18 @@
 
 
     let pratikBitCoin = new Blockchain();
+
+    console.log('Mining Block 1..... ');
     pratikBitCoin.addBlock(new Block(1,"12/12/2017", {amount: 4}));
-    pratikBitCoin.addBlock(new Block(2,"01/02/2018", {amount: 10}));
+
 
     console.log('Is chain valid? ' + pratikBitCoin.isChainValid());
 
-//    console.log(JSON.stringify(pratikBitCoin, null, 4));
+    console.log('Mining Block 2..... ');
+
+        pratikBitCoin.addBlock(new Block(2,"01/02/2018", {amount: 10}));
+
+
+    console.log(JSON.stringify(pratikBitCoin, null, 4));
 
 

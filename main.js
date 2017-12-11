@@ -47,6 +47,26 @@
         this.chain.push(newBlock);
     }
 
+    isChainValid(){
+
+        for(let i=1; i<this.chain.length;i++){
+
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i-1];
+
+            if(currentBlock.hash!== currentBlock.calculateHash()){
+                return false;
+            }
+
+            if(currentBlock.previousHash !== previousBlock.hash){
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
     }
 
 
@@ -55,6 +75,8 @@
     pratikBitCoin.addBlock(new Block(1,"12/12/2017", {amount: 4}));
     pratikBitCoin.addBlock(new Block(2,"01/02/2018", {amount: 10}));
 
-    console.log(JSON.stringify(pratikBitCoin, null, 4));
+    console.log('Is chain valid? ' + pratikBitCoin.isChainValid());
+
+//    console.log(JSON.stringify(pratikBitCoin, null, 4));
 
 
